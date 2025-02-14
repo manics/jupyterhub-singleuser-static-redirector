@@ -30,7 +30,11 @@ class Redirector(ExtensionAppJinjaMixin, ExtensionApp):
     # Local path to templates directory.
     template_paths = [DEFAULT_TEMPLATE_FILES_PATH]  # type:ignore[assignment]
 
-    destination = Unicode(os.getenv("STATIC_REDIRECTOR_DESTINATION", ""), config=True, help="Redirect destination.")
+    destination = Unicode(
+        os.getenv("STATIC_REDIRECTOR_DESTINATION", ""),
+        config=True,
+        help="Redirect destination.",
+    )
 
     def initialize_handlers(self):
         """Initialize handlers."""

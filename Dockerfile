@@ -7,12 +7,14 @@ FROM docker.io/library/python:3.13.0-slim-bookworm
 RUN useradd --create-home --uid 1000 jovyan
 
 COPY static_redirector /src/static_redirector
-COPY requirements.txt /src/
+COPY etc /src/etc
+COPY pyproject.toml README.md requirements.txt /src/
 RUN pip install --no-cache-dir \
     -r /src/requirements.txt \
-    /src/static_redirector
+    /src/
 
 COPY jupyter_server_config.py /etc/jupyter/
 
 USER jovyan
+EXPOSE 8888
 CMD ["jupyterhub-singleuser"]
