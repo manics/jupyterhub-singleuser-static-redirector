@@ -24,6 +24,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: "requirements*.txt"
+
+      - name: Install
+        run: pip install -r requirements-dev.txt .
+
+      - name: Run tests
+        run: python -mpytest
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -61,3 +74,5 @@ jobs:
               github.ref == format('refs/heads/{0}', env.PUBLISH_BRANCH) ||
               startsWith(github.ref, 'refs/tags/')
             }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
