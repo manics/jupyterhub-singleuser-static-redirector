@@ -1,10 +1,10 @@
 """A simple Jupyter Server extension example."""
 
 import os
-
-from traitlets import Unicode
+from typing import Any, Callable
 
 from jupyter_server.extension.application import ExtensionApp, ExtensionAppJinjaMixin
+from traitlets import Unicode
 
 from .handlers import ErrorHandler, IndexHandler
 
@@ -36,7 +36,7 @@ class Redirector(ExtensionAppJinjaMixin, ExtensionApp):
         help="Redirect destination.",
     )
 
-    def initialize_handlers(self):
+    def initialize_handlers(self) -> None:
         """Initialize handlers."""
         self.handlers.extend(
             [
@@ -45,7 +45,7 @@ class Redirector(ExtensionAppJinjaMixin, ExtensionApp):
             ]
         )
 
-    def initialize_settings(self):
+    def initialize_settings(self) -> None:
         """Initialize settings."""
         self.log.info(f"Config {self.config}")
 
@@ -54,4 +54,5 @@ class Redirector(ExtensionAppJinjaMixin, ExtensionApp):
 # Main entry point
 # -----------------------------------------------------------------------------
 
-main = launch_new_instance = Redirector.launch_instance
+
+main = launch_new_instance = Redirector.launch_instance  #  type: Callable[..., None]

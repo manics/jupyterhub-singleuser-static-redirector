@@ -1,12 +1,12 @@
+import os
 import socket
 import sys
 import time
-import os
-import requests
 from subprocess import Popen
 from typing import Generator
 from uuid import uuid4
 
+import requests
 from pytest import fixture
 
 

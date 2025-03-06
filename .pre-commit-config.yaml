@@ -5,9 +5,20 @@ repos:
     hooks:
       # Linter.
       - id: ruff
-        args: ["--fix", "--show-fixes"]
+        args: ["--select=I", "--fix", "--show-fixes"]
       # Formatter.
       - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+      - id: mypy
+        files: ^static_redirector
+        args:
+          - --strict
+          - --ignore-missing-imports
+        additional_dependencies:
+          - jupyter_server
 
   - repo: https://github.com/rbubley/mirrors-prettier
     rev: v3.4.2
