@@ -10,7 +10,7 @@ import requests
 from pytest import fixture
 
 
-@fixture(scope="session")
+@fixture(scope="function")
 def random_port() -> int:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(("127.0.0.1", 0))
@@ -20,16 +20,27 @@ def random_port() -> int:
     return port
 
 
-@fixture(scope="session")
+@fixture(scope="function")
+def token() -> str:
+    return str(uuid4())
+
+
+@fixture(scope="function")
 def destination() -> str:
-    return "https://jupyter.org"
+    return f"https://example.org/?{uuid4()}"
 
 
-@fixture(scope="session")
-def jupyter_server(random_port: int, destination: str) -> Generator[str, None, None]:
+@fixture(scope="function")
+def autoredirect() -> str | None:
+    return None
+
+
+@fixture(scope="function")
+def jupyter_server(
+    random_port, token, destination, autoredirect
+) -> Generator[str, None, None]:
     """Run jupyter-server"""
 
-    token = str(uuid4())
     args = [
         sys.executable,
         "-m",
@@ -41,8 +52,11 @@ def jupyter_server(random_port: int, destination: str) -> Generator[str, None, N
         # "--config=jupyter_server_config.py",
         # "--debug",
     ]
-    env = os.environ.copy()
+
+    env = {}
     env["STATIC_REDIRECTOR_DESTINATION"] = destination
+    if autoredirect is not None:
+        env["STATIC_REDIRECTOR_AUTOREDIRECT"] = autoredirect
 
     server_proc = Popen(args, env=env)
 
@@ -65,7 +79,7 @@ def jupyter_server(random_port: int, destination: str) -> Generator[str, None, N
             exc = RuntimeError(f"Failed to successfully request {check_url}")
         raise exc from None
 
-    yield url, token
+    yield url
 
     # clean up after server is no longer needed
     server_proc.terminate()

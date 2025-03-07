@@ -1,5 +1,7 @@
 """API handlers for the Jupyter Server example."""
 
+import logging
+
 from jupyter_server.base.handlers import JupyterHandler
 from jupyter_server.extension.handler import (
     ExtensionHandlerJinjaMixin,
@@ -20,9 +22,12 @@ class IndexHandler(BaseTemplateHandler):
     @web.authenticated
     def get(self) -> None:
         """Get the root response."""
-        self.write(
-            self.render_template("index.html", destination=self.config.destination)
-        )
+        if self.config.autoredirect:
+            self.redirect(self.config.destination)
+        else:
+            self.write(
+                self.render_template("index.html", destination=self.config.destination)
+            )
 
 
 class ErrorHandler(BaseTemplateHandler):

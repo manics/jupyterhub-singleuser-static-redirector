@@ -4,7 +4,7 @@ import os
 from typing import Any, Callable
 
 from jupyter_server.extension.application import ExtensionApp, ExtensionAppJinjaMixin
-from traitlets import Unicode
+from traitlets import Bool, Unicode, default
 
 from .handlers import ErrorHandler, IndexHandler
 
@@ -35,6 +35,16 @@ class Redirector(ExtensionAppJinjaMixin, ExtensionApp):
         config=True,
         help="Redirect destination.",
     )
+
+    autoredirect = Bool(
+        config=True,
+        help="Automatically redirect without user input.",
+    )
+
+    @default("autoredirect")
+    def _default_autoredirect(self) -> bool:
+        value = os.getenv("STATIC_REDIRECTOR_AUTOREDIRECT", "")
+        return value.lower() in {"true", "t", "1"}
 
     def initialize_handlers(self) -> None:
         """Initialize handlers."""
