@@ -1,8 +1,6 @@
 # Use this image for Z2JH where the singleuser server static-redirector and
-# desktop containers are seperate
-#
-# docker.io/manics/jupyter-static-redirector
-FROM docker.io/library/python:3.13.0-slim-bookworm
+# desktop containers are separate
+FROM docker.io/library/python:3.13.5-slim-bookworm
 
 RUN useradd --create-home --uid 1000 jovyan
 
