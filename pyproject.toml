@@ -12,7 +12,7 @@ dependencies = [
     "jinja2",
     "jupyter_server",
 ]
-version = "0.0.1"
+version = "0.1.0"
 # dynamic = ["version"]
 
 [project.scripts]
